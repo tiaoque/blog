@@ -69,3 +69,10 @@ npm start
 ## License
 
 MIT
+
+
+# server
+pm2 delete 1
+
+# serve in production
+npm run build

@@ -13,13 +13,13 @@
     <br>
     <span class="meta">
       <span v-if="item.type !== 'job'" class="by">
-        by <router-link :to="'/user/' + item.by">{{ item.by }}</router-link>
+        by <router-link :to="routePrefix + '/user/' + item.by">{{ item.by }}</router-link>
       </span>
       <span class="time">
         {{ item.time | timeAgo }} ago
       </span>
       <span v-if="item.type !== 'job'" class="comments-link">
-        | <router-link :to="'/item/' + item.id">{{ item.descendants }} comments</router-link>
+        | <router-link :to="routePrefix + '/item/' + item.id">{{ item.descendants }} comments</router-link>
       </span>
     </span>
     <span class="label" v-if="item.type !== 'story'">{{ item.type }}</span>
@@ -41,6 +41,9 @@ export default {
     return `${id}::${__lastUpdated}::${timeAgo(time)}`
   },
   computed: {
+    routePrefix () {
+      return isDev? '' : '/blog/'  
+    },
     itemRouterPath () {
       return isDev? '/item/' + this.item.id:'/blog/item/' + this.item.id
     }

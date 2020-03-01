@@ -8,7 +8,7 @@ const createListView = id => () => import('../views/CreateListView').then(m => m
 const ItemView = () => import('../views/ItemView.vue')
 const UserView = () => import('../views/UserView.vue')
 const isDev = process.env.NODE_ENV !== 'production'
-let routePrefix = '' 
+let routePrefix = isDev ? '': '/blog' 
 let redirectPrefix = isDev ? '': '/blog' 
 
 export function createRouter () {

@@ -14,6 +14,9 @@
           {{ item.time | timeAgo }} ago
         </p>
       </div>
+      <div class="item-view-body">
+        <div v-html='item.contentBody'></div>
+      </div>
       <div class="item-view-comments">
         <p class="item-view-comments-header">
           {{ item.kids ? item.descendants + ' comments' : 'No comments yet.' }}
@@ -36,7 +39,8 @@ export default {
   components: { Spinner, Comment },
 
   data: () => ({
-    loading: true
+    // loading: true
+    loading: false
   }),
 
   computed: {
@@ -75,6 +79,8 @@ export default {
       this.loading = true
       fetchComments(this.$store, this.item).then(() => {
         this.loading = false
+      }).catch((e) => {
+        this.loading = false
       })
     }
   }
@@ -91,6 +97,14 @@ function fetchComments (store, item) {
   }
 }
 </script>
+<style lang="stylus" scoped>
+  .item-view-body {
+    margin: 0;
+    font-size: 1.1em;
+    padding: 1em 0;
+    position: relative;
+  }
+</style>>
 
 <style lang="stylus">
 .item-view-header

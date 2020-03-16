@@ -1,10 +1,10 @@
 <template>
   <div class="news-view">
     <div class="news-list-nav">
-      <router-link v-if="page > 1" :to="'/' + type + '/' + (page - 1)">&lt; prev</router-link>
+      <router-link v-if="page > 1" :to="(isDev ? '/' : '/blog/') + type + '/' + (page - 1)">&lt; prev</router-link>
       <a v-else class="disabled">&lt; prev</a>
       <span>{{ page }}/{{ maxPage }}</span>
-      <router-link v-if="hasMore" :to="'/' + type + '/' + (page + 1)">more &gt;</router-link>
+      <router-link v-if="hasMore" :to="(isDev ? '/' : '/blog/') + type + '/' + (page + 1)">more &gt;</router-link>
       <a v-else class="disabled">more &gt;</a>
     </div>
     <transition :name="transition">
@@ -21,6 +21,7 @@
 <script>
 import { watchList } from '../api'
 import Item from '../components/Item.vue'
+const isDev = process.env.NODE_ENV !== 'production'
 
 export default {
   name: 'item-list',
@@ -37,7 +38,8 @@ export default {
     return {
       transition: 'slide-right',
       displayedPage: Number(this.$route.params.page) || 1,
-      displayedItems: this.$store.getters.activeItems
+      displayedItems: this.$store.getters.activeItems,
+      isDev
     }
   },
 
@@ -86,7 +88,7 @@ export default {
         type: this.type
       }).then(() => {
         if (this.page < 0 || this.page > this.maxPage) {
-          this.$router.replace(`/${this.type}/1`)
+          this.$router.replace((isDev? '/blog': '') + `/${this.type}/1`)
           return
         }
         this.transition = from === -1

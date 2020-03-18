@@ -1,20 +1,9 @@
 <template>
   <div class="news-view">
-    <div class="news-list-nav">
-      <router-link v-if="page > 1" :to="(isDev ? '/' : '/blog/') + type + '/' + (page - 1)">&lt; prev</router-link>
-      <a v-else class="disabled">&lt; prev</a>
-      <span>{{ page }}/{{ maxPage }}</span>
-      <router-link v-if="hasMore" :to="(isDev ? '/' : '/blog/') + type + '/' + (page + 1)">more &gt;</router-link>
-      <a v-else class="disabled">more &gt;</a>
-    </div>
-    <transition :name="transition">
-      <div class="news-list" :key="displayedPage" v-if="displayedPage > 0">
-        <transition-group tag="ul" name="item">
-          <item v-for="item in displayedItems" :key="item.id" :item="item">
-          </item>
-        </transition-group>
-      </div>
-    </transition>
+    <input @change="savePassword" type='text'/>
+    <textarea class='body_input'></textarea>
+    <button @click="post">post</button>
+    <button @click="login">login</button>
   </div>
 </template>
 
@@ -82,16 +71,37 @@ export default {
   },
 
   methods: {
-    post() {
-      fetch('http://tiaoque.com:1337/posts',{method: 'POST',headers:{
-        'content-type': 'application/json',
-        Authorization: 'Bearer jwt'}, body:JSON.stringify({})})
+    savePassword (value){
+      localStorage.setItem('password', value)
     },
-    login() {
-      const {data} = await fetch('http://tiaoque.com:1337/auth/local', {headers: {
-      'user-agent': 'Mozilla/4.0 MDN Example',
-      'content-type': 'application/json'
-    },method:"POST", body: JSON.stringify({identifier: 'nopains@126.com', password:'password'})})
+    getPassword (){
+      localStorage.getItem('password')
+    },
+    post () {
+      let body = this.$el.find('.body_input').value()
+      _post(body)
+    },
+    _post(post) {
+      fetch('http://tiaoque.com:1337/posts',{
+        method: 'POST',
+        headers:{
+        'content-type': 'application/json',
+        Authorization: `Bearer ${token}`}, body:JSON.stringify(post)})
+    },
+    async login () {
+      const data = await fetch('http://tiaoque.com:1337/auth/local', {
+        headers: {
+        'user-agent': 'Mozilla/4.0 MDN Example',
+        'content-type': 'application/json'
+        },
+        method:"POST", 
+        body: JSON.stringify({
+          identifier: 'nopains@126.com', 
+          password: this.getPassword()
+        })
+      })
+      let jwt = data.jwt
+      savePassword(jwt)
     },
     loadItems (to = this.page, from = -1) {
       this.$bar.start()

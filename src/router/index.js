@@ -7,6 +7,7 @@ Vue.use(Router)
 const createListView = id => () => import('../views/CreateListView').then(m => m.default(id))
 const ItemView = () => import('../views/ItemView.vue')
 const UserView = () => import('../views/UserView.vue')
+const LoginView = () => import('../views/Login.vue')
 const isDev = process.env.NODE_ENV !== 'production'
 let routePrefix = isDev ? '': '/blog' 
 let redirectPrefix = isDev ? '': '/blog' 
@@ -17,6 +18,7 @@ export function createRouter () {
     fallback: false,
     scrollBehavior: () => ({ y: 0 }),
     routes: [
+      { path: routePrefix + '/login/', component: LoginView},
       { path: routePrefix + '/top/:page(\\d+)?', component: createListView('top') },
       { path: routePrefix + '/new/:page(\\d+)?', component: createListView('new') },
       { path: routePrefix + '/show/:page(\\d+)?', component: createListView('show') },

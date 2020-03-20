@@ -66,7 +66,6 @@ export default {
     login () {
       const data = fetch('http://tiaoque.com:1337/auth/local', {
         headers: {
-        'user-agent': 'Mozilla/4.0 MDN Example',
         'content-type': 'application/json'
         },
         method:"POST", 
